@@ -15,4 +15,8 @@ public partial class Certificate
     [Required]
     [DisplayName("File Path")]
     public string ImagePath { get; set; } = null!;
+    [DisplayName("Last Updated By")]
+    public string LastUpdatedBy { get; set; }
+    [DisplayName("Last Updated On")]
+    public DateTime LastUpdatedOn { get; set; }
 }

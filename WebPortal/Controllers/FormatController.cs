@@ -19,21 +19,21 @@ namespace WebPortal.Controllers
         public IActionResult Index(string division)
         {
             //List<Format> Formats;
-            var Formats = context.Formats.ToList();
+            var Format = context.Formats.ToList();
             if (string.IsNullOrEmpty(division) || division == "All")
             {
-                Formats = context.Formats.ToList();
+                Format = context.Formats.ToList();
                 ViewBag.Division = "All";
             }
             else
             {
-                Formats = context.Formats.Where(d => d.Division == division).ToList();
+                Format = context.Formats.Where(d => d.Division == division).ToList();
                 ViewBag.Division = division;
             }
 
             var viewModel = new DocumentViewModel
             {
-                Formats = Formats,
+                Formats = Format,
             };
 
             return View(viewModel);
@@ -71,6 +71,9 @@ namespace WebPortal.Controllers
         [Authorize(Roles = "Admin,Super,QMS_ADMIN,BT_ADMIN")]
         public IActionResult AddProduct(FormatViewModel prod, string division)
         {
+            string userEmail = User.Identity.Name;
+            DateTime currentTime = DateTime.Now;
+
             var roles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
                                        .Select(c => c.Value)
                                        .ToList();
@@ -95,7 +98,9 @@ namespace WebPortal.Controllers
                         {
                             Name = prod.Name,
                             Division = prod.Division,
-                            FormatPath = fileName
+                            FormatPath = fileName,
+                            LastUpdatedBy = userEmail,
+                            LastUpdatedOn = currentTime
                         };
                         context.Formats.Add(p);
                         context.SaveChanges();
@@ -158,6 +163,9 @@ namespace WebPortal.Controllers
         [Authorize(Roles = "Admin,Super,QMS_ADMIN,BT_ADMIN")]
         public async Task<IActionResult> Edit(FormatViewModel formatViewModel, string division)
         {
+            string userEmail = User.Identity.Name;
+            DateTime currentTime = DateTime.Now;
+
             var roles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
                                        .Select(c => c.Value)
                                        .ToList();
@@ -207,6 +215,8 @@ namespace WebPortal.Controllers
 
                     product.Name = formatViewModel.Name;
                     product.Division = formatViewModel.Division;
+                    product.LastUpdatedBy = userEmail;
+                    product.LastUpdatedOn = currentTime;
                     // other properties if any
 
                     try

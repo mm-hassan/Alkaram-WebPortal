@@ -1,9 +1,4 @@
-﻿@*
-    For more inProcedureion on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@model IEnumerable<WebPortal.Models.Procedure>
+﻿@model DocumentViewModel
 
 @{
     ViewData["Title"] = "Procedures";
@@ -44,10 +39,16 @@
                         <thead>
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Name)
+                                    @Html.DisplayNameFor(model => model.Procedures.First().Name)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Division)
+                                    @Html.DisplayNameFor(model => model.Procedures.First().Division)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Certificates.First().LastUpdatedBy)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Certificates.First().LastUpdatedOn)
                                 </th>
                                 @* <th>
                                     @Html.DisplayNameFor(model => model.ProcedurePath)
@@ -56,15 +57,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @if (Model.Procedures != null && Model.Procedures.Any())
                             {
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Division)
-                                    </td>
+                                @foreach (var item in Model.Procedures)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.Name
+                                        </td>
+                                        <td>
+                                            @item.Division
+                                        </td>
+                                        <td>
+                                            @item.LastUpdatedBy
+                                        </td>
+                                        <td>
+                                            @item.LastUpdatedOn
+                                        </td>
                                     @* <td>
                                         @Html.DisplayFor(modelItem => item.ProcedurePath)
                                     </td> *@
@@ -77,7 +86,8 @@
 
                                         }
                                     </td>
-                                </tr>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>

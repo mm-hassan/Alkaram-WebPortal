@@ -18,20 +18,25 @@ namespace WebPortal.Controllers
 
         public IActionResult Index(string division)
         {
-            List<Procedure> Procedures;
-
+            //List<Procedure> Procedures;
+            var Procedure = context.Procedures.ToList();
             if (string.IsNullOrEmpty(division) || division == "All")
             {
-                Procedures = context.Procedures.ToList();
+                Procedure = context.Procedures.ToList();
                 ViewBag.Division = "All";
             }
             else
             {
-                Procedures = context.Procedures.Where(d => d.Division == division).ToList();
+                Procedure = context.Procedures.Where(d => d.Division == division).ToList();
                 ViewBag.Division = division;
             }
 
-            return View(Procedures);
+            var viewModel = new DocumentViewModel
+            {
+                Procedures = Procedure,
+            };
+
+            return View(viewModel);
         }
 
         [Authorize(Roles = "Admin,Super,QMS_ADMIN,BT_ADMIN")]
@@ -66,6 +71,9 @@ namespace WebPortal.Controllers
         [Authorize(Roles = "Admin,Super,QMS_ADMIN,BT_ADMIN")]
         public IActionResult AddProduct(ProcedureViewModel prod, string division)
         {
+            string userEmail = User.Identity.Name;
+            DateTime currentTime = DateTime.Now;
+
             var roles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
                                        .Select(c => c.Value)
                                        .ToList();
@@ -90,7 +98,9 @@ namespace WebPortal.Controllers
                         {
                             Name = prod.Name,
                             Division = prod.Division,
-                            ProcedurePath = fileName
+                            ProcedurePath = fileName,
+                            LastUpdatedBy = userEmail,
+                            LastUpdatedOn = currentTime
                         };
                         context.Procedures.Add(p);
                         context.SaveChanges();
@@ -153,6 +163,9 @@ namespace WebPortal.Controllers
         [Authorize(Roles = "Admin,Super,QMS_ADMIN,BT_ADMIN")]
         public async Task<IActionResult> Edit(ProcedureViewModel ProcedureViewModel, string division)
         {
+            string userEmail = User.Identity.Name;
+            DateTime currentTime = DateTime.Now;
+
             var roles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
                                        .Select(c => c.Value)
                                        .ToList();
@@ -202,6 +215,8 @@ namespace WebPortal.Controllers
 
                     product.Name = ProcedureViewModel.Name;
                     product.Division = ProcedureViewModel.Division;
+                    product.LastUpdatedBy = userEmail;
+                    product.LastUpdatedOn = currentTime;
                     // other properties if any
 
                     try

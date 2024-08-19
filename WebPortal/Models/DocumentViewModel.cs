@@ -10,6 +10,9 @@ namespace WebPortal.Models
 
         public List<Format> Formats { get; set; }
 
+        public List<Procedure> Procedures { get; set; }
+
         public List<CertificateViewModel> CertificatesViewModel { get; set; } = new List<CertificateViewModel>();
+
     }
 }

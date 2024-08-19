@@ -84,7 +84,7 @@ namespace WebPortal.Controllers
         public IActionResult AddProduct(CertificateViewModel prod, string division)
         {
             string userEmail = User.Identity.Name;
-            DateTime currentTime = DateTime.UtcNow;
+            DateTime currentTime = DateTime.Now;
 
             var roles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
                                        .Select(c => c.Value)
@@ -110,13 +110,24 @@ namespace WebPortal.Controllers
                         {
                             Name = prod.Name,
                             Division = prod.Division,
-                            ImagePath = fileName
+                            ImagePath = fileName,
+                            LastUpdatedBy = userEmail,
+                            LastUpdatedOn = currentTime
                         };
                         context.Certificates.Add(p);
                         context.SaveChanges();
                         TempData["Success"] = "File Added...";
                         return RedirectToAction("Index", new { division });
                     }
+                }
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors);
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine(error.ErrorMessage);
+                    }
+                    return View(); // or handle accordingly
                 }
             }
             else
@@ -173,6 +184,8 @@ namespace WebPortal.Controllers
         [Authorize(Roles = "Admin,Super,QMS_ADMIN,BT_ADMIN")]
         public async Task<IActionResult> Edit(CertificateViewModel certificateViewModel, string division)
         {
+            string userEmail = User.Identity.Name;
+            DateTime currentTime = DateTime.Now;
             var roles = User.Claims.Where(c => c.Type == System.Security.Claims.ClaimTypes.Role)
                                        .Select(c => c.Value)
                                        .ToList();
@@ -222,6 +235,8 @@ namespace WebPortal.Controllers
 
                     product.Name = certificateViewModel.Name;
                     product.Division = certificateViewModel.Division;
+                    product.LastUpdatedBy = userEmail;
+                    product.LastUpdatedOn = currentTime;
                     // other properties if any
 
                     try

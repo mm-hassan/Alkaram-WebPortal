@@ -45,6 +45,12 @@
                                 <th>
                                     @Html.DisplayNameFor(model => model.Certificates.First().Division)
                                 </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Certificates.First().LastUpdatedBy)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Certificates.First().LastUpdatedOn)
+                                </th>
                                @*  <th>
                                     @Html.DisplayNameFor(model => model.ImagePath)
                                 </th> *@
@@ -62,6 +68,12 @@
                                         </td>
                                         <td>
                                             @item.Division
+                                        </td>
+                                        <td>
+                                            @item.LastUpdatedBy
+                                        </td>
+                                        <td>
+                                            @item.LastUpdatedOn
                                         </td>
                                         @* <td>
                                             @Html.DisplayFor(modelItem => item.ImagePath)

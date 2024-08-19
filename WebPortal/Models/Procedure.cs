@@ -13,5 +13,9 @@ namespace WebPortal.Models
         [Required]
         [DisplayName("Procedure Path")]
         public string ProcedurePath { get; set; } = null!;
+        [DisplayName("Last Updated By")]
+        public string LastUpdatedBy { get; set; }
+        [DisplayName("Last Updated On")]
+        public DateTime LastUpdatedOn { get; set; }
     }
 }

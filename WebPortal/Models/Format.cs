@@ -13,5 +13,9 @@ namespace WebPortal.Models
         [Required]
         [DisplayName("Format Path")]
         public string FormatPath { get; set; } = null!;
+        [DisplayName("Last Updated By")]
+        public string LastUpdatedBy { get; set; }
+        [DisplayName("Last Updated On")]
+        public DateTime LastUpdatedOn { get; set; }
     }
 }
