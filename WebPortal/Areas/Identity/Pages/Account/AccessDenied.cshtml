@@ -1,0 +1,35 @@
+﻿@page
+@model AccessDeniedModel
+@{
+    ViewData["Title"] = "Access denied";
+    Layout = "_LayoutLogin";
+}
+
+
+
+<!-- about breadcrumb -->
+<section class="w3l-about-breadcrumb position-relative text-center">
+    <div class="breadcrumb-bg breadcrumb-bg-about py-sm-5 py-4">
+        <div class="container py-lg-5 py-3">
+            <h2 class="title">No Permission</h2>
+            <ul class="breadcrumbs-custom-path mt-2">
+                <li><a href="/home">Home</a></li>
+                <li class="active"><span class="fa fa-angle-double-right mx-2" aria-hidden="true"></span> Access Denied </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<!-- //about breadcrumb -->
+
+<section class="w3l-content-6 p-5">
+    <div class="container py-lg-5">
+        <div class="content-info-in row pb-5">
+            <header class="pt-5 pb-5">
+                <h1 class="text-danger">@ViewData["Title"]</h1>
+                <p class="text-danger">You do not have access to this resource.</p>
+                <p class="text-danger">(Contact with BT Department)</p>
+            </header>
+        </div>
+    </div>
+</section>
+

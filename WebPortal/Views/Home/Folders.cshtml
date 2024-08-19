@@ -1,0 +1,89 @@
+﻿@model DocumentViewModel
+
+@{
+    ViewData["Title"] = "Select Document Type";
+    var division = ViewBag.Division;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- about breadcrumb -->
+<section class="w3l-about-breadcrumb position-relative text-center">
+    <div class="breadcrumb-bg breadcrumb-bg-about py-sm-5 py-4">
+        <div class="container py-lg-5 py-3">
+            <h2 class="title">Document Types</h2>
+            <ul class="breadcrumbs-custom-path mt-2">
+                <li><a href="#url">Home</a></li>
+                <li class="active"><span class="fa fa-angle-double-right mx-2" aria-hidden="true"></span> Types </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<!-- //about breadcrumb -->
+<section class="w3l-content-6 py-5">
+    <div class="container py-lg-5">
+        <div class="content-info-in row justify-content-center">
+            <div class="col-md-12">
+                <h1 class="pb-4">Document Types</h1>
+                <p style="color: green;" class="pb-4">@TempData["Success"]</p>
+                <div class="folder-container">
+                    @foreach (var item in Model.DocumentTypes)
+                    {
+                        <div class="folder">
+                            <a  asp-controller="@item.Type" asp-action="Index" asp-route-division="@ViewBag.Division" asp-route-type="@item.Type">
+
+                            <div class="folder-icon">
+
+                                <img src="~/images/folder.png" alt="Folder Icon" />
+                            </div>
+                            <div class="folder-name">
+                                @item.Type
+                            </div>
+                               
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<!-- Template JavaScript -->
+<script src="~/js/jquery-3.3.1.min.js"></script>
+<script src="~/js/theme-change.js"></script>
+<script>
+    $(function () {
+        $('.navbar-toggler').click(function () {
+            $('body').toggleClass('noscroll');
+        })
+    });
+
+    $(window).on("scroll", function () {
+        var scroll = $(window).scrollTop();
+        if (scroll >= 80) {
+            $("#site-header").addClass("nav-fixed");
+        } else {
+            $("#site-header").removeClass("nav-fixed");
+        }
+    });
+
+    $(".navbar-toggler").on("click", function () {
+        $("header").toggleClass("active");
+    });
+    $(document).on("ready", function () {
+        if ($(window).width() > 991) {
+            $("header").removeClass("active");
+        }
+        $(window).on("resize", function () {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+        });
+    });
+</script>

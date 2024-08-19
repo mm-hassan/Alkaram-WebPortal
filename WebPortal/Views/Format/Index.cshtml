@@ -1,0 +1,134 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model DocumentViewModel
+
+@{
+    ViewData["Title"] = "Formats";
+    var division = ViewBag.Division;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<!-- about breadcrumb -->
+<section class="w3l-about-breadcrumb position-relative text-center">
+    <div class="breadcrumb-bg breadcrumb-bg-about py-sm-5 py-4">
+        <div class="container py-lg-5 py-3">
+            <h2 class="title">@division Formats</h2>
+            <ul class="breadcrumbs-custom-path mt-2">
+                <li><a href="#url">Home</a></li>
+                <li class="active"><span class="fa fa-angle-double-right mx-2" aria-hidden="true"></span> Formats </li>
+            </ul>
+        </div>
+    </div>
+</section>
+<!-- //about breadcrumb -->
+
+<section class="w3l-content-6 py-5">
+    <div class="container py-lg-5">
+        <div class="content-info-in row justify-content-center">
+            <div class="col-md-12">
+                <h1 class="pb-4">@division Formats</h1>
+
+                <p class="pb-3">
+                    @if (division != "All")
+                    {
+                        <a asp-action="AddProduct" asp-route-division="@division" class="btn btn-primary">Add New</a>
+                    }
+                </p>
+                <p style="color: green;" class="pb-4">@TempData["Success"]</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Formats.First().Name)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.Formats.First().Division)
+                                </th>
+                               @*  <th>
+                                    @Html.DisplayNameFor(model => model.FormatPath)
+                                </th> *@
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Formats != null && Model.Formats.Any())
+                            {
+                                @foreach (var item in Model.Formats)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.Name
+                                        </td>
+                                        <td>
+                                            @item.Division
+                                        </td>
+                                        @* <td>
+                                            @Html.DisplayFor(modelItem => item.FormatPath)
+                                        </td> *@
+                                        <td>
+                                            <a asp-action="ViewFile" asp-route-fileName="@item.FormatPath" asp-route-division="@item.Division" target="_blank" class="btn btn-sm mb-1" style="background-color: #285430; color: white; margin-right: 5px;">View File</a>
+                                            @if (division != "All")
+                                            {
+                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-edit mb-1" asp-route-division="@item.Division" style="background-color: #028391; color: white; margin-right: 5px;">Edit</a>
+                                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm mb-1" asp-route-division="@item.Division" style="background-color: red; color: white; margin-right: 5px;">Delete</a>
+
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- Template JavaScript -->
+<script src="~/js/jquery-3.3.1.min.js"></script>
+<script src="~/js/theme-change.js"></script>
+<!-- disable body scroll which navbar is in active -->
+<script>
+    $(function () {
+        $('.navbar-toggler').click(function () {
+            $('body').toggleClass('noscroll');
+        })
+    });
+</script>
+<!-- disable body scroll which navbar is in active -->
+<!--/MENU-JS-->
+<script>
+    $(window).on("scroll", function () {
+        var scroll = $(window).scrollTop();
+
+        if (scroll >= 80) {
+            $("#site-header").addClass("nav-fixed");
+        } else {
+            $("#site-header").removeClass("nav-fixed");
+        }
+    });
+
+    //Main navigation Active Class Add Remove
+    $(".navbar-toggler").on("click", function () {
+        $("header").toggleClass("active");
+    });
+    $(document).on("ready", function () {
+        if ($(window).width() > 991) {
+            $("header").removeClass("active");
+        }
+        $(window).on("resize", function () {
+            if ($(window).width() > 991) {
+                $("header").removeClass("active");
+            }
+        });
+    });
+</script>

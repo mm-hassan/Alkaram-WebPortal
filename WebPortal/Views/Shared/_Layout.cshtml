@@ -1,0 +1,559 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@model DocumentViewModel
+@{
+    var viewModel = ViewData["DocumentViewModel"] as DocumentViewModel;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>@ViewData["Title"] - WebPortal</title>
+    <link href="~/css/style-starter.css" rel="stylesheet" />
+    <a href="~/fonts/fontawesome-webfont.eot"></a>
+    <a href="~/fonts/fontawesome-webfont.ttf"></a>
+    <a href="~/fonts/fontawesome-webfont.woff2"></a>
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/jquery.countup.js"></script>
+    <script src="~/js/jquery.waypoints.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/js/theme-change.js"></script>
+    <style>
+        .folder-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .folder {
+            width: 150px;
+            text-align: center;
+            background-color: #f1c40f; /* Folder color */
+            border: 2px solid #e67e22; /* Border color */
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+            .folder:hover {
+                transform: scale(1.05);
+            }
+
+        .folder-icon img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .folder-name {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #2c3e50; /* Text color */
+        }
+
+    </style>
+</head>
+<body>
+    <!--header-->
+    <header id="site-header" class="fixed-top">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+
+                <h1>
+                    <a class="navbar-brand" href="#">
+                        <span>A</span>lkaram
+                    </a>
+                </h1>
+                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="fa icon-expand fa-bars"></span>
+                    <span class="fa icon-close fa-times"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/Index">Home </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/About">About</a>
+                        </li>
+
+                       @*  <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                                Controlled Documents
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="BT">Business Technology</a>
+                                <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Spinning">Spinning</a>
+                                <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Weaving">Weaving</a>
+                                <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="QMS">QMS</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="All">All Certificates</a>
+                            </div>
+                        </li> *@
+
+
+                        @* <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                    Documents
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div class="dropdown-scroll-container">
+
+                    <a class="dropdown-item dropdown-toggle" href="#" id="btDropdown" data-toggle="dropdown" aria-expanded="false">Business Technology</a>
+                    <div class="sub-dropdown" aria-labelledby="btDropdown">
+                        <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="BT" asp-route-type="Format">Format</a>
+                        <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="BT" asp-route-type="Procedures">Procedures</a>
+                        <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="BT" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                   
+                    <a class="dropdown-item dropdown-toggle" href="#" id="spinningDropdown" data-toggle="dropdown" aria-expanded="false">Spinning</a>
+                    <div class="sub-dropdown"  aria-labelledby="btDropdown">
+                        <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="Spinning" asp-route-type="Format">Format</a>
+                        <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="Spinning" asp-route-type="Procedures">Procedures</a>
+                        <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Spinning" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                    <a class="dropdown-item dropdown-toggle" href="#" id="weavingDropdown" data-toggle="dropdown" aria-expanded="false">Weaving</a>
+                    <div class="sub-dropdown" aria-labelledby="weavingDropdown">
+                        <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="Weaving" asp-route-type="Format">Format</a>
+                        <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="Weaving" asp-route-type="Procedures">Procedures</a>
+                        <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Weaving" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                    <a class="dropdown-item dropdown-toggle" href="#" id="qmsDropdown" data-toggle="dropdown" aria-expanded="false">QMS</a>
+                    <div class="sub-dropdown" aria-labelledby="qmsDropdown">
+                        <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="QMS" asp-route-type="Format">Format</a>
+                        <a class="dropdown-item" asp-controller="Procedures" asp-action="Index" asp-route-division="QMS" asp-route-type="Procedures">Procedures</a>
+                        <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="QMS" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                    <a class="dropdown-item dropdown-toggle" href="#" id="ProcessinggDropdown" data-toggle="dropdown" aria-expanded="false">Processing</a>
+                    <div class="sub-dropdown" aria-labelledby="ProcessingDropdown">
+                        <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="Processing" asp-route-type="Format">Format</a>
+                        <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="Processing" asp-route-type="Procedures">Procedures</a>
+                        <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Processing" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                    <a class="dropdown-item dropdown-toggle" href="#" id="ConeDyeingDropdown" data-toggle="dropdown" aria-expanded="false">Cone Dyeing</a>
+                    <div class="sub-dropdown" aria-labelledby="ConeDyeingDropdown">
+                        <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="ConeDyeing" asp-route-type="Format">Format</a>
+                        <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="ConeDyeing" asp-route-type="Procedures">Procedures</a>
+                        <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="ConeDyeing" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                    <a class="dropdown-item dropdown-toggle" href="#" id="HomeTextileDropdown" data-toggle="dropdown" aria-expanded="false">Home Textile</a>
+                    <div class="sub-dropdown" aria-labelledby="HomeTextileDropdown">
+                        <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="HomeTextile" asp-route-type="Format">Format</a>
+                        <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="HomeTextile" asp-route-type="Procedures">Procedures</a>
+                        <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="HomeTextile" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                                    <a class="dropdown-item dropdown-toggle" href="#" id="KnitsDropdown" data-toggle="dropdown" aria-expanded="false">Knits</a>
+                                    <div class="sub-dropdown" aria-labelledby="KnitsDropdown">
+                                        <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="Knits" asp-route-type="Format">Format</a>
+                                        <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="Knits" asp-route-type="Procedures">Procedures</a>
+                                        <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Knits" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                    <a class="dropdown-item dropdown-toggle" href="#" id="DomesticMarketDropdown" data-toggle="dropdown" aria-expanded="false">Domestic Market</a>
+                    <div class="sub-dropdown" aria-labelledby="DomesticMarketDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="DomesticMarket" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="DomesticMarket" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="DomesticMarket" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                    <a class="dropdown-item dropdown-toggle" href="#" id="AK-3Dropdown" data-toggle="dropdown" aria-expanded="false">AK-3</a>
+                    <div class="sub-dropdown" aria-labelledby="AK-3Dropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="AK-3" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="AK-3" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="AK-3" asp-route-type="Certificates">Certificates</a>
+                    </div>
+
+                    <a class="dropdown-item dropdown-toggle" href="#" id="KnitProcessingDropdown" data-toggle="dropdown" aria-expanded="false">Knit Processing</a>
+                                <div class="sub-dropdown" aria-labelledby="KnitProcessingDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="KnitProcessing" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="KnitProcessing" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="KnitProcessing" asp-route-type="Certificates">Certificates</a>
+                    </div>
+                                <a class="dropdown-item dropdown-toggle" href="#" id="HTBeddingOSDropdown" data-toggle="dropdown" aria-expanded="false">HT Bedding OS</a>
+                                <div class="sub-dropdown" aria-labelledby="HTBeddingOSDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="HTBeddingOS" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="HTBeddingOS" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="HTBeddingOS" asp-route-type="Certificates">Certificates</a>
+                                </div>
+                                
+                                <a class="dropdown-item dropdown-toggle" href="#" id="KnitsApparelDropdown" data-toggle="dropdown" aria-expanded="false">Knits Apparel</a>
+                                <div class="sub-dropdown" aria-labelledby="KnitsApparelDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="KnitsApparel" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="KnitsApparel" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="KnitsApparel" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="WeavingKnitsDropdown" data-toggle="dropdown" aria-expanded="false">Weaving Knits</a>
+                                <div class="sub-dropdown" aria-labelledby="WeavingKnitsDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="WeavingKnits" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="WeavingKnits" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="WeavingKnits" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="WeavingKnitsDropdown" data-toggle="dropdown" aria-expanded="false">Weaving Knits</a>
+                                <div class="sub-dropdown" aria-labelledby="WeavingKnitsDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="WeavingKnits" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="WeavingKnits" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="WeavingKnits" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="AccessoriesManf.Dropdown" data-toggle="dropdown" aria-expanded="false">Accessories Manf.</a>
+                                <div class="sub-dropdown" aria-labelledby="AccessoriesManf.Dropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="AccessoriesManf." asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="AccessoriesManf." asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="AccessoriesManf." asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="SpinningNooriabadDropdown" data-toggle="dropdown" aria-expanded="false">Spinning Nooriabad</a>
+                                <div class="sub-dropdown" aria-labelledby="SpinningNooriabadDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="SpinningNooriabad" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="SpinningNooriabad" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="SpinningNooriabad" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="LocalMarketDropdown" data-toggle="dropdown" aria-expanded="false">Local Market</a>
+                                <div class="sub-dropdown" aria-labelledby="LocalMarketDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="LocalMarket" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="LocalMarket" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="LocalMarket" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="RetailDropdown" data-toggle="dropdown" aria-expanded="false">Retail</a>
+                                <div class="sub-dropdown" aria-labelledby="RetailDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="Retail" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="Retail" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Retail" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="DomesticProductionAK-4Dropdown" data-toggle="dropdown" aria-expanded="false">Domestic Production AK-4</a>
+                                <div class="sub-dropdown" aria-labelledby="DomesticProductionAK-4Dropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="DomesticProductionAK-4" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="DomesticProductionAK-4" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="DomesticProductionAK-4" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="Retail-FabricDropdown" data-toggle="dropdown" aria-expanded="false">Retail-Fabric</a>
+                                    <div class="sub-dropdown" aria-labelledby="Retail-FabricDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="Retail-Fabric" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="Retail-Fabric" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Retail-Fabric" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="Mea-CamaDropdown" data-toggle="dropdown" aria-expanded="false">Mea-Cama</a>
+                                    <div class="sub-dropdown" aria-labelledby="Mea-CamaDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="Mea-Cama" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="Mea-Cama" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Mea-Cama" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                <a class="dropdown-item dropdown-toggle" href="#" id="AKTM-USADropdown" data-toggle="dropdown" aria-expanded="false">AKTM-USA</a>
+                                    <div class="sub-dropdown" aria-labelledby="AKTM-USADropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="AKTM-USA" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="AKTM-USA" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="AKTM-USA" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                 <a class="dropdown-item dropdown-toggle" href="#" id="GroupDropdown" data-toggle="dropdown" aria-expanded="false">Group</a>
+                                    <div class="sub-dropdown" aria-labelledby="GroupDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="Group" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="Group" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="Group" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                 <a class="dropdown-item dropdown-toggle" href="#" id="FTUSADropdown" data-toggle="dropdown" aria-expanded="false">FT USA</a>
+                                    <div class="sub-dropdown" aria-labelledby="FTUSADropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="FTUSA" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="FTUSA" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="FTUSA" asp-route-type="Certificates">Certificates</a>
+                                </div>
+
+                                 <a class="dropdown-item dropdown-toggle" href="#" id="ServicesOSDropdown" data-toggle="dropdown" aria-expanded="false">Services OS</a>
+                                    <div class="sub-dropdown" aria-labelledby="ServicesOSDropdown">
+                                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="ServicesOS" asp-route-type="Format">Format</a>
+                                    <a class="dropdown-item" asp-controller="Procedure" asp-action="Index" asp-route-division="ServicesOS" asp-route-type="Procedures">Procedures</a>
+                                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="ServicesOS" asp-route-type="Certificates">Certificates</a>
+                                </div>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="All">All Certificates</a>
+                </div>
+                </div>
+            </li> *@
+
+            <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+        Documents
+    </a>
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <div class="dropdown-scroll-container">
+                                    @if (viewModel?.Divisions != null)
+                                    {
+                                        @foreach (var division in viewModel.Divisions)
+                                        {
+                                            <a class="dropdown-item" id="@($"{division.Name}Dropdown")" asp-controller="Home" asp-action="Folders" asp-route-division="@division.Name">@division.Name</a>
+                                        }
+
+                                    }
+                                </div>
+
+
+    @* <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        @foreach (var division in Model)
+        {
+             <a class="dropdown-item" id="@($"{division.Name}Dropdown")"
+                                       asp-controller="Home" asp-action="Folders">@division.Name</a>
+         } *@
+
+        
+       @*  @foreach (var division in Model.Name)
+        {
+            <a class="dropdown-item dropdown-toggle" href="#" id="@($"{division}Dropdown")" data-toggle="dropdown" aria-expanded="false">@division</a>
+             <div class="dropdown-menu" aria-labelledby="@($"{division}Dropdown")">
+                @foreach (var docType in Model.DocumentTypes)
+                {
+                    <a class="dropdown-item" asp-controller="Format" asp-action="Index" asp-route-division="@division.Name" asp-route-type="@docType.Type">@docType.Type</a>
+                }
+            </div> 
+        } *@
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" asp-controller="Certificate" asp-action="Index" asp-route-division="All">All Certificates</a>
+    </div>
+</li> 
+
+
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Super") || await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/AppRoles/Index">Roles</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <ul class="navbar-nav search-right mt-lg-0 mt-2">
+                        <li class="nav-item mr-3" title="Search">
+                            <a href="#search" class="btn search-search">
+                                <span class="fa fa-search" aria-hidden="true"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/Home/Services" class="btn btn-primary d-lg-block btn-style mr-2">
+                                Applications
+                            </a>
+                        </li>
+                    </ul>
+
+                    <!-- search popup -->
+                    <div id="search" class="pop-overlay">
+                        <div class="popup">
+                            <form action="#" method="GET" class="d-sm-flex">
+                                <input type="search" placeholder="Search.." name="search" required="required" autofocus>
+                                <button type="submit">Search</button>
+                                <a class="close" href="#url">&times;</a>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- /search popup -->
+                </div>
+                <!-- toggle switch for light and dark theme -->
+                <!-- <div class="mobile-position">
+                    <nav class="navigation">
+                        <div class="theme-switch-wrapper">
+                            <label class="theme-switch" for="checkbox">
+                                <input type="checkbox" id="checkbox">
+                                <div class="mode-container">
+                                    <i class="gg-sun"></i>
+                                    <i class="gg-moon"></i>
+                                </div>
+                            </label>
+                        </div>
+                    </nav>
+                </div> -->
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <partial name="_LoginPartial" />
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <!-- Optional JavaScript for enabling nested dropdowns -->
+<script>
+    $(document).ready(function () {
+        $('.dropdown-menu .dropdown-toggle').on('click', function (e) {
+            if (!$(this).next().hasClass('show')) {
+                $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+            }
+            var $subMenu = $(this).next('.dropdown-menu');
+            $subMenu.toggleClass('show');
+            $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function (e) {
+                $('.dropdown-submenu .show').removeClass('show');
+            });
+            return false;
+        });
+    });
+
+
+
+</script>
+
+
+        </div>
+    </header>
+    <!-- Ensure jQuery is loaded before Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <!-- footer-66 -->
+    <footer class="w3l-footer-66">
+        <section class="footer-inner-main">
+            <div class="footer-hny-grids py-5">
+                <div class="container py-lg-4">
+                    <div class="text-txt">
+                        <!-- <div class="row newsletter-grids-footer">
+                        <div class="col-lg-6 newsletter-text pr-lg-5">
+                        <h3 class="hny-title two">Newsletter</h3>
+                        <h4>
+                        Sign up for our monthly newsletter to get the latest news, volunteer opportunities,
+                        </h4>
+                        </div>
+                        <div class="col-lg-6 newsletter-right">
+                        <form action="#" method="post" class="footer-newsletter">
+
+                        <input type="email" name="email" class="form-input" placeholder="Enter your email..">
+
+                        <button type="submit" class="btn">Subscribe</button>
+                        </form>
+                        </div>
+                        </div> -->
+                        <div class="right-side">
+                            <div class="row sub-columns">
+                                <div class="col-lg-4 col-md-6 sub-one-left pr-lg-4">
+                                    <h2>
+                                        <a class="navbar-brand" href="">
+                                            <span>A</span>lkaram
+                                        </a>
+                                    </h2>
+                                    <p class="pr-lg-4">
+                                        Our journey started in 1986 when Alkaram Textile Mills was setup to provide innovative textile solutions across the globe. Soon, Alkaram Textile Mills emerged as one of the leading textile manufacturing and exporting companies of Pakistan, with a global footprint in the US, UK, France and Portugal. For more than 35 years, Alkaram’s reputation and distinctive image have been consistently developed across an expanding number of products, brands, and international markets. Currently, Alkaram Textile Mills is the largest vertically integrated textile setup in Pakistan.
+                                    </p>
+                                    <div class="columns-2">
+                                        <ul class="social">
+                                            <li>
+                                                <a href="https://www.facebook.com/AKTMOfficialPage/" target="_blank"><span class="fa fa-facebook" aria-hidden="true"></span></a>
+                                            </li>
+                                            <li>
+                                                <a href="https://www.linkedin.com/company/al-karam-textile/" target="_blank"><span class="fa fa-linkedin" aria-hidden="true"></span></a>
+                                            </li>
+                                            <li>
+                                                <a href="https://www.instagram.com/alkaramtextile/?hl=en" target="_blank"><span class="fa fa-instagram" aria-hidden="true"></span></a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 sub-one-left">
+                                    <h6>Our Services</h6>
+                                    <div class="mid-footer-gd sub-two-right">
+
+                                        <ul>
+                                            <li>
+                                                <a href="/Home/"><span class="fa fa-angle-double-right mr-2"></span> Home</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Home/About"><span class="fa fa-angle-double-right mr-2"></span> About</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Home/Applications"><span class="fa fa-angle-double-right mr-2"></span> Applications</a>
+                                            </li>
+
+                                            <li>
+                                                <a href="https://www.linkedin.com/in/mm-hassan/" target="_blank"><span class="fa fa-angle-double-right mr-2"></span>All Rights reserved by Mubbashir (BT)</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-6 sub-one-left">
+                                    <h6>Contact Info</h6>
+                                    <div class="sub-contact-info">
+                                        <p>Address: Adam Jee Rd, Landhi Town, Karachi, Karachi City, Sindh</p>
+                                        <p class="my-3">Phone: <strong><a href="tel:02135018638">(021) 35018638</a></strong></p>
+                                        <p>E-mail:<strong> <a href="mailto:info@example.com">alkaram@alkaram.com</a></strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="below-section">
+                <div class="container">
+                    <div class="copyright-footer">
+                        <div class="columns text-lg-left">
+                            <p>© 2024 Alkaram. All rights reserved | Designed by <a href="#">BT Department</a></p>
+                        </div>
+                        <ul class="columns text-lg-right">
+                            <li>
+                                <a href="#">Privacy Policy</a>
+                            </li>
+                            <li>|</li>
+                            <li>
+                                <a href="#">Terms Of Use</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- copyright -->
+            <!-- move top -->
+            <button onclick="topFunction()" id="movetop" title="Go to top">
+                <span class="fa fa-long-arrow-up" aria-hidden="true"></span>
+            </button>
+            <script>
+                // When the user scrolls down 20px from the top of the document, show the button
+                window.onscroll = function () {
+                    scrollFunction()
+                };
+
+                function scrollFunction() {
+                    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                        document.getElementById("movetop").style.display = "block";
+                    } else {
+                        document.getElementById("movetop").style.display = "none";
+                    }
+                }
+
+                // When the user clicks on the button, scroll to the top of the document
+                function topFunction() {
+                    document.body.scrollTop = 0;
+                    document.documentElement.scrollTop = 0;
+                }
+            </script>
+            <!-- /move top -->
+        </section>
+    </footer>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
